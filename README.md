@@ -6,11 +6,11 @@ The API you're trying to hit should implement a single endpoint for each HTTP GE
 
 ## Usage
 You can check `/tests/index.html` for examples of  requests, but here's a quick example:
-	var api = new RestAPIWrapper({url: 'http://path/to/some/api'});
-	api.get({ controller: 'foo', success: function(data) { alert('Got ' + data.length + ' items.') } });
+    var api = new RestAPIWrapper({url: 'http://path/to/some/api'});
+    api.get({ controller: 'foo', success: function(data) { alert('Got ' + data.length + ' items.') } });
 
 This hits an endpoint of `http://path/to/some/api/get` with a get request and returns the first X amount of rows. To continue paging you can simply call:
-	api.next({ success: function(data) { alert('Got next' + data.length + ' items.') } });
+    api.next({ success: function(data) { alert('Got next' + data.length + ' items.') } });
 
 ## Other
 Thus far I've only used this on self-written C# APIs written with the new MVC Web-Api framework, but it should work on any REST style API
