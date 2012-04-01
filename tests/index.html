@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<title>API Tests</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+		<script src="../src/restapiwrapper.js" type="text/javascript"></script>
+		<script src="./helpers/Person.js" type="text/javascript"></script>
+
+		<script type="text/javascript">
+
+			var firstId, nextId = '';
+			$().ready(function () {
+
+				// this will init the API and define the default controller
+				var api = new RestAPIWrapper({
+					url: 'http://localhost/jsRestApiWrapper/api/csharp/'
+					, controller: 'person'
+					, odata_top: 5
+				});
+
+				// attempt to call the create endpoint and ensure the result is returned
+				api.create({
+					model : new Person({ FirstName: 'test', LastName: 'test', Email: 'test@test.com' })
+					, success: function (data) {
+						console.log('create success!');
+						console.log(data)
+					}
+				});
+
+				// attempt to call the get endpoint and return the first page of records
+				api.get({
+					success: function (data) {
+
+						var items = $.map(data, function (item) { return new Person(item) });
+						console.log('get success! (first: ' + items[0].Id + ')');
+						console.log(items);
+					}
+				});
+
+				// attempt to call the get endpoint and return the next page of records
+				api.next({
+					success: function (data) {
+
+						var items = $.map(data, function (item) { return new Person(item) });
+
+						console.log('next success! (first: ' + items[0].Id + ')');
+						console.log(items);
+					}
+				});
+
+				// Attempt to call the get endpoint for a single record
+				api.get({
+					id: 5
+					, success: function (data) {
+						console.log('get one success!');
+						console.log(data);
+
+						// Now let's attempt to update this record
+						data.FirstName = 'New';
+						
+						api.update({
+							id: data.UriHash
+							, model: data
+							, success: function (data) {
+								console.log('update success!');
+							}
+						});
+					}
+				});
+
+				// Attempt to call the delete endpoint
+				api.delete({
+					id: 10
+					, success: function( data ) {
+						console.log('delete success!');
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		Check the console log for output!
+	</body>
+</html>
